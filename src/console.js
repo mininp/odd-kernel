@@ -1,7 +1,8 @@
 const width = document.body.clientWidth;
 const height = document.body.clientHeight;
+const maxchar = document.body.clientWidth / em();
 
-let buffer = "Testing Testing 123\nHello, World!\n\n[x@y ~]$ _"
+let buffer = "Testing Testing 123\nHello, World!\n\n[x@y ~]$ _";
 
 let c = document.createElement("canvas");
 document.body.appendChild(c);
