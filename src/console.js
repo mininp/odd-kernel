@@ -1,9 +1,13 @@
+const emu = new Kernel();
+
 const width = document.body.clientWidth;
 const height = document.body.clientHeight;
 const maxchar = document.body.clientWidth / em();
 
 let inputBuffer = "";
-let buffer = "ODD Kernel Console\n";
+let buffer = [
+	`ODD Kernel Console v${emu.version}`,
+].join("\n") + "\n";
 let ps1 = "$ ";
 
 document.addEventListener("keydown", (e) => {
@@ -11,6 +15,11 @@ document.addEventListener("keydown", (e) => {
 		if (inputBuffer.length > 0) {
 			inputBuffer = inputBuffer.substring(0, inputBuffer.length - 1);
 		}
+	} else if (e.code == "Enter") {
+		buffer += `\n${ps1}${inputBuffer}\n`;
+
+		emu.command(inputBuffer);
+		inputBuffer = "";
 	} else {
 		if (e.key.length == 1) {
 			inputBuffer += e.key;

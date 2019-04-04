@@ -10,4 +10,5 @@ html, body {
 	align-items: center;
 	overflow: hidden;
 	font-size: 1em;
+	cursor: text;
 }
