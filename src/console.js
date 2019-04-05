@@ -29,6 +29,10 @@ document.addEventListener("keydown", (e) => {
 	blink = true;
 });
 
+emu.on("message", (m) => {
+	buffer += `${m}\n`;
+});
+
 let c = document.createElement("canvas");
 document.body.appendChild(c);
 c.width = width;
