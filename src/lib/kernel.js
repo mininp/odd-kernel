@@ -30,3 +30,17 @@ class Kernel {
 		// placeholder
 	}
 }
+
+class Process {
+	constructor(instructions) {
+		this.instructions = instructions;
+
+		this.counter = 0;
+	}
+}
+
+function toHex(decimal) {
+	let hex = decimal.toString(16);
+
+	return `0x${"0".repeat(4 - hex.length)}${hex}`;
+}

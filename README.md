@@ -6,21 +6,21 @@ Kernel itself located at `/src/lib/kernel.js`.
 ## docs
 ### commands/dasm
 - stack
-	- `psh x`
+	- `0x0001` `psh x`
 		- add decval or hexval x to stack
 		- if decval, converted to hexval
-	- `pop`
+	- `0x0002` `pop`
 		- removes value from top of stack
-	- `clr`
+	- `0x0003` `clr`
 		- clears current stack
 		- is potetially hazerdous
 
 - math
-	- `add`
+	- `0x0010` `add`
 		- mathematically adds two hexvals on top of stack
 		- outputs on top of stack
 		- if not enough args/causes overflow, oops
-	- `sub`
+	- `0x0011` `sub`
 		- mathematically subtracts two hexvals from top of stack
 		- `s[1] - s[0]`
 		- outputs on top if stack
@@ -29,19 +29,19 @@ Kernel itself located at `/src/lib/kernel.js`.
 - conditional
 	- acts as jmp command, else ignored
 	- compares values in order `s[1] >> s[0]`
-	- `igt x`
+	- `0x0020` `igt x`
 		- if greater than
-	- `ilt x`
+	- `0x0021` `ilt x`
 		- if less than
-	- `ieg x`
+	- `0x0022` `ieg x`
 		- if greater than or equal to
-	- `iel x`
+	- `0x0023` `iel x`
 		- if greater than or equal to
-	- `ieq x`
+	- `0x0024` `ieq x`
 		- if equal to
 
 - misc
-	- `jmp x`
+	- `0x0000` `jmp x`
 		- sets hexval of program counter to x
 		- if type of x isn't hexval, oops
 
