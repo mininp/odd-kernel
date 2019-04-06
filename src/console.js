@@ -78,7 +78,7 @@ let blink = false;
 })();
 
 function parse(command) {
-	let instruction = command.split(" ");
+	let instruction = command.split('"');
 
 	instruction.forEach((v, i) => {
 		if (i == 0) {
@@ -103,7 +103,7 @@ function parse(command) {
 				case "iel": instruction[0] = "0x0023"; break;
 				case "ieq": instruction[0] = "0x0024"; break;
 
-				default: instruction[0] = "0x0001"; break;
+				default: instruction[0] = "0xffff"; break;
 			}
 		} else {
 			

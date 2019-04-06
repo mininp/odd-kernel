@@ -23,8 +23,24 @@ class Kernel {
 	command(instruction) {
 		switch (instruction[0]) {
 			case "0x0001": {
-
+				this.emit("message", "hi")
 			} break;
+
+			default: this.panic("invalid instruction"); break; // will oops if in process
 		}
+	}
+
+	oops(process, error) {
+		this.emit("oops", `panic: ${error ? error : "no error"}`);
+
+		// placeholder
+	}
+
+	panic(error) {
+		this.emit("message", `panic: ${error ? error : "no error"}`);
+
+		//while (true) {
+		//	this.emit("message", "");
+		//}
 	}
 }
