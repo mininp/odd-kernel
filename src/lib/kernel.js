@@ -2,8 +2,6 @@ class Kernel {
 	constructor() {
 		this.version = "0.1";
 
-		this.processes = [];
-
 		this.events = [];
 	}
 
@@ -22,25 +20,11 @@ class Kernel {
 		})
 	}
 
-	command(command) {
-		this.emit("message", `received command: ${command}`);
+	command(instruction) {
+		switch (instruction[0]) {
+			case "0x0001": {
+
+			} break;
+		}
 	}
-
-	tick() {
-		// placeholder
-	}
-}
-
-class Process {
-	constructor(instructions) {
-		this.instructions = instructions;
-
-		this.counter = 0;
-	}
-}
-
-function toHex(decimal) {
-	let hex = decimal.toString(16);
-
-	return `0x${"0".repeat(4 - hex.length)}${hex}`;
 }
