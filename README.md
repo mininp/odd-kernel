@@ -4,47 +4,47 @@ A javascript kernel for ODD with a console.
 Kernel itself located at `/src/lib/kernel.js`.
 
 ## docs
-### commands/dasm
+### commands/oasm
 - stack
-	- `0x0002` | `psh x`
-		- add hexval x to stack
-	- `0x0003` | `pop`
+	- `00000010` | `psh x`
+		- add x to stack
+	- `00000011` | `pop`
 		- removes value from top of stack
-	- `0x0004` | `clr`
+	- `00000100` | `clr`
 		- clears current stack
-		- is potetially hazerdous
+		- is potetially dangerous
 
 - math
-	- `0x0010` | `add`
-		- mathematically adds two hexvals on top of stack
+	- `00000101` | `add`
+		- mathematically adds two values on top of stack
 		- outputs on top of stack
 		- if not enough args/causes overflow, oops
-	- `0x0011` | `sub`
-		- mathematically subtracts two hexvals from top of stack
-		- `s[1] - s[0]`
-		- outputs on top if stack
+	- `00000110` | `sub`
+		- mathematically subtracts two values from top of stack
+		- ordered`s[1] - s[0]`
+		- outputs on top of stack
 		- if not enough args/causes underflow, oops
 
 - conditional
 	- if true acts as jmp command, else ignored
 	- compares values in order `s[1] >> s[0]`
 	- if not enough args, oops
-	- `0x0020` | `igt x`
+	- `00000111` | `igt x`
 		- if greater than
-	- `0x0021` | `ilt x`
+	- `00001000` | `ilt x`
 		- if less than
-	- `0x0022` | `ieg x`
+	- `00001001` | `ieg x`
 		- if greater than or equal to
-	- `0x0023` | `iel x`
+	- `00001010` | `iel x`
 		- if greater than or equal to
-	- `0x0024` | `ieq x`
+	- `00001011` | `ieq x`
 		- if equal to
 
 - misc
-	- `0x0000` | `jmp x`
-		- sets hexval of program counter to x
-		- if type of x isn't hexval, oops
-	- `0x0001` | `msg x`
+	- `00000000` | `jmp x`
+		- sets value of program counter to x
+		- if x isn't specified, act as null
+	- `00000001` | `msg x`
 		- sends messages with string x
 		- although x can be any type
 
@@ -58,20 +58,25 @@ Kernel itself located at `/src/lib/kernel.js`.
 	- freezes system, reboot required
 
 ### types
-- hexval
+- binary
+	- binary value
+	- eg. `01`, `1`, `10`
+
+- hex
 	- hexadecimal value
-	- 6 digits
 	- begins with `0x`
-	- remaining four characters can be in the range of `0` through `9`, `a` through `f`
-	- eg. `0x0001`, `0xf046`
+	- converted to binary
+	- eg. `0x01`, `0x1`, `0x2`
 
 - char
 	- represents an ascii character
 	- one character long
 	- surrounded with single quotes
+	- converted to 8-bit value
 	- eg. `'a'`, `'A'`
 
 - string
 	- represents a collection of ascii characters
-	- surrounded with single quote
+	- surrounded with double quote
+	- converted to multiple chars
 	- eg. `"Hello, World!"`

@@ -2,13 +2,6 @@ const emu = new Kernel();
 
 const width = document.body.clientWidth;
 const height = document.body.clientHeight;
-const maxchar = document.body.clientWidth / em();
-
-let inputBuffer = "";
-let buffer = [
-	`ODD Kernel Console v${emu.version}`,
-].join("\n") + "\n";
-let ps1 = "$ ";
 
 document.addEventListener("keydown", (e) => {
 	if (e.code == "Backspace") {
@@ -33,6 +26,15 @@ emu.on("message", (m) => {
 	buffer += `${m}\n`;
 });
 
+emu.on("oops", (m) => {
+	buffer += `${m}\n`;
+});
+
+emu.on("panic", (m) => {
+	buffer += `${m}\n`;
+});
+
+// initialize canvas
 let c = document.createElement("canvas");
 document.body.appendChild(c);
 c.width = width;
@@ -42,8 +44,16 @@ let ctx = c.getContext("2d");
 ctx.lineWidth = 2;
 ctx.font = "1em monospace";
 
+// temp
 let frame = 0;
 let blink = false;
+
+let inputBuffer = "";
+let buffer = [
+	"ODD Kernel Console",
+	`Running Kernel odd-${emu.version}`,
+].join("\n") + "\n";
+let ps1 = "$ ";
 
 (function render() {
 	frame++;
@@ -78,72 +88,46 @@ let blink = false;
 })();
 
 function parse(command) {
-	let instruction = command.split('"');
+	let instruction = command.split(" ");
+	let fInstruction = [];
 
-	instruction.forEach((v, i) => {
-		if (i == 0) {
-			switch (v) {
-				// misc
-				case "jmp": instruction[0] = "0x0000"; break;
-				case "msg": instruction[0] = "0x0001"; break;
+	switch (instruction[0]) {
+		// misc
+		case "jmp": instruction[0] = "0"; break;
+		case "msg": instruction[0] = "1"; break;
 
-				// stack
-				case "psh": instruction[0] = "0x0002"; break;
-				case "pop": instruction[0] = "0x0003"; break;
-				case "clr": instruction[0] = "0x0004"; break;
+		// stack
+		case "psh": instruction[0] = "10"; break;
+		case "pop": instruction[0] = "11"; break;
+		case "clr": instruction[0] = "100"; break;
 
-				// math
-				case "add": instruction[0] = "0x0010"; break;
-				case "sub": instruction[0] = "0x0011"; break;
+		// math
+		case "add": instruction[0] = "101"; break;
+		case "sub": instruction[0] = "110"; break;
 
-				// conditional
-				case "igt": instruction[0] = "0x0020"; break;
-				case "ilt": instruction[0] = "0x0021"; break;
-				case "ieg": instruction[0] = "0x0022"; break;
-				case "iel": instruction[0] = "0x0023"; break;
-				case "ieq": instruction[0] = "0x0024"; break;
+		// conditional
+		case "igt": instruction[0] = "111"; break;
+		case "ilt": instruction[0] = "1000"; break;
+		case "ieg": instruction[0] = "1001"; break;
+		case "iel": instruction[0] = "1010"; break;
+		case "ieq": instruction[0] = "1011"; break;
+	}
 
-				default: instruction[0] = "0xffff"; break;
-			}
+	for (let i = 0; i < instruction.length; i++) {
+		let arg = instruction[i];
+
+		if (arg.startsWith("'") && arg.endsWith("'")) {
+			arg = simplifyChar(arg);
+			fInstruction.push(arg);
+		} else if (arg.startsWith(`"`) && arg.endsWith(`"`)) {
+			arg = simplifyString(arg);
+			fInstruction = fInstruction.concat(arg);
 		} else {
-			
+			fInstruction.push(arg);
 		}
-	});
+	}
 
-	return instruction;
-}
-
-function isHex(hex) {
-	return hex.length == 6 &&
-	       hex.startsWith("0x") &&
-	       /[0-9a-f]/i.test(hex[2]) &&
-	       /[0-9a-f]/i.test(hex[3]) &&
-	       /[0-9a-f]/i.test(hex[4]) &&
-	       /[0-9a-f]/i.test(hex[5]);
-}
-
-function isChar(char) {
-	return char.length == 3 &&
-	       char.startsWith("'") &&
-	       char.endsWith("'");
-}
-
-function isString(string) {
-	return string.startsWith('"') && string.endsWith('"');
-}
-
-function charToHex(char) {
-	return decimalToHex(char.charCodeAt(0));
-}
-
-function hexToChar(hex) {
-	return String.fromCharCode(parseInt(hex));
-}
-
-function decimalToHex(decimal) {
-	let hex = decimal.toString(16);
-
-	return `0x${"0".repeat(4 - hex.length)}${hex}`;
+	return fInstruction;
 }
 
 function em(x = 1) {

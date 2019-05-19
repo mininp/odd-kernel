@@ -21,9 +21,11 @@ class Kernel {
 	}
 
 	command(instruction) {
-		switch (instruction[0]) {
-			case "0x0001": {
-				this.emit("message", "hi")
+		switch (binaryToDecimal(instruction[0])) {
+			case 1: {
+				instruction.shift();
+
+				this.emit("message", charsToString(instruction));
 			} break;
 
 			default: this.panic("invalid instruction"); break; // will oops if in process
@@ -31,13 +33,13 @@ class Kernel {
 	}
 
 	oops(process, error) {
-		this.emit("oops", `panic: ${error ? error : "no error"}`);
+		this.emit("oops", `error: ${error ? error : "no error"}`);
 
 		// placeholder
 	}
 
 	panic(error) {
-		this.emit("message", `panic: ${error ? error : "no error"}`);
+		this.emit("panic", `error: ${error ? error : "no error"}`);
 
 		//while (true) {
 		//	this.emit("message", "");
