@@ -1,4 +1,4 @@
-const emu = new Kernel();
+const emu = new Kernel(1024 * 10); // 10mb of memory
 
 const width = document.body.clientWidth;
 const height = document.body.clientHeight;
@@ -13,7 +13,7 @@ document.addEventListener("keydown", (e) => {
 
 		case "Enter": {
 			buffer += `\n${ps1}${inputBuffer}\n`;
-	
+
 			emu.command(parse(inputBuffer));
 			lastBuffer = inputBuffer;
 			inputBuffer = "";
@@ -23,6 +23,10 @@ document.addEventListener("keydown", (e) => {
 			let x = lastBuffer;
 			lastBuffer = inputBuffer;
 			inputBuffer = x;
+		} break;
+
+		case "Escape": {
+			inputBuffer = "";
 		} break;
 
 		default: {
@@ -84,19 +88,19 @@ let ps1 = "$ ";
 
 	{ // draw text
 		let index;
-	
+
 		// buffer
 		buffer.split("\n").forEach((string, i) => {
 			index = i;
 			ctx.fillText(string, 0, em(i + 1));
 		});
-	
+
 		// prompt
 		let p = ps1 + inputBuffer;
-	
+
 		if (blink)
 			p += "|";
-	
+
 		ctx.fillText(p, 0, em(index + 2));
 	}
 })();
@@ -125,6 +129,11 @@ function parse(command) {
 		case "ieg": instruction[0] = "1001"; break;
 		case "iel": instruction[0] = "1010"; break;
 		case "ieq": instruction[0] = "1011"; break;
+
+		// memory
+		case "mem": instruction[0] = "1100"; break;
+		case "stk": instruction[0] = "1101"; break;
+		case "ust": instruction[0] = "1110"; break;
 	}
 
 	for (let i = 0; i < instruction.length; i++) {

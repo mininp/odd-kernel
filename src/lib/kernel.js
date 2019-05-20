@@ -1,8 +1,16 @@
 class Kernel {
-	constructor() {
+	constructor(ramLength = 1024) {
+		this.name = "odd";
 		this.version = "0.1";
 
-		this.events = [];
+		this.events = []
+
+		this.stack = []
+		this.memory = {}
+
+		for (let i = 0; i < ramLength; i++) {
+			this.memory[i] = 0;
+		}
 	}
 
 	on(e, callback) {
@@ -17,26 +25,43 @@ class Kernel {
 			if (event.event == e) {
 				event.callback(arg);
 			}
-		})
+		});
 	}
 
 	command(instruction) {
 		switch (binaryToDecimal(instruction[0])) {
-			case 1: {
+			// misc
+			case 0: { // jmp
+				// code
+			} break;
+
+			case 1: { // msg
 				instruction.shift();
 
-				this.emit("message", charsToString(instruction));
+				let chars = instruction;
+
+				if (instruction.length == 0)
+					chars = this.stack.map(x => decimalToBinary(x));
+
+				this.emit("message", charsToString(chars));
 			} break;
+
+			// stack
+			case 2: this.stack.push(binaryToDecimal(instruction[1])); break;
+			case 3: this.stack.pop(); break;
+			case 4: this.stack = []; break;
 
 			default: this.panic("invalid instruction"); break; // will oops if in process
 		}
 	}
 
 	oops(process, error) {
+		console.warn(error);
 		this.emit("oops", `error: ${error ? error : "no error"}`);
 	}
 
 	panic(error) {
+		console.error(error);
 		this.emit("panic", `error: ${error ? error : "no error"}`);
 	}
 }

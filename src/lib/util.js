@@ -1,3 +1,7 @@
+Array.prototype.last = () => {
+	return this[this.length - 1];
+}
+
 function isBinary(bin) {
 	for (let i = 0; i < bin.length; i++) {
 		if (bin[i] != "1" && bin[i] != "0")

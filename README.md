@@ -53,6 +53,7 @@ Kernel itself located at `/src/lib/kernel.js`.
 		- if x isn't specified, act as null
 	- `00000001` | `msg x` | message
 		- sends messages event, converts x to ascii char
+		- if x isn't specified, prints stack
 
 ### error handling
 - oops
