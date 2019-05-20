@@ -6,20 +6,20 @@ Kernel itself located at `/src/lib/kernel.js`.
 ## docs
 ### commands/oasm
 - stack
-	- `00000010` | `psh x`
+	- `00000010` | `psh x` | push
 		- add x to stack
-	- `00000011` | `pop`
+	- `00000011` | `pop` | pop
 		- removes value from top of stack
-	- `00000100` | `clr`
+	- `00000100` | `clr` | clear
 		- clears current stack
 		- is potetially dangerous
 
 - math
-	- `00000101` | `add`
+	- `00000101` | `add` | add
 		- mathematically adds two values on top of stack
 		- outputs on top of stack
 		- if not enough args/causes overflow, oops
-	- `00000110` | `sub`
+	- `00000110` | `sub` | subtract
 		- mathematically subtracts two values from top of stack
 		- ordered`s[1] - s[0]`
 		- outputs on top of stack
@@ -29,32 +29,40 @@ Kernel itself located at `/src/lib/kernel.js`.
 	- if true acts as jmp command, else ignored
 	- compares values in order `s[1] >> s[0]`
 	- if not enough args, oops
-	- `00000111` | `igt x`
-		- if greater than
-	- `00001000` | `ilt x`
-		- if less than
-	- `00001001` | `ieg x`
-		- if greater than or equal to
-	- `00001010` | `iel x`
-		- if greater than or equal to
-	- `00001011` | `ieq x`
-		- if equal to
+	- `00000111` | `igt x` | if greater than
+	- `00001000` | `ilt x` | if less than
+	- `00001001` | `ieg x` | if greater than or equal to
+	- `00001010` | `iel x` | if less than or equal to
+	- `00001011` | `ieq x` | if equal to
+
+- memory
+	- `00001100` | `mem` | memory
+		- reserves memory addresses between `s[1]` to `s[0]`
+		- writes `STX` to `s[1]`
+		- writes `ETX` to `s[0]`
+	- `00001101` | `stk x` | enter stack
+		- changes from global stack to memory stack
+		- tries to read stack from x, if not `STX` then panic, and if there isn't any `ETX` after one megabyte panic aswell
+	- `00001110` | `ust` | unstack
+		- changes from memory stack to global stack
+		- if not in a memory stack, act as null
 
 - misc
-	- `00000000` | `jmp x`
+	- `00000000` | `jmp x` | jump
 		- sets value of program counter to x
 		- if x isn't specified, act as null
-	- `00000001` | `msg x`
-		- sends messages with string x
-		- although x can be any type
+	- `00000001` | `msg x` | message
+		- sends messages event, converts x to ascii char
 
 ### error handling
 - oops
-	- prints `oops: x` where x is the error
+	- sends oops event
+	- with message `error: x` where x is the error
 	- stops offending process, if it cannot, triggers a panic
 
 - panic
-	- prints `panic: x` where x is the error
+	- sends panic event
+	- with message `error: x` where x is the error
 	- freezes system, reboot required
 
 ### types

@@ -4,18 +4,31 @@ const width = document.body.clientWidth;
 const height = document.body.clientHeight;
 
 document.addEventListener("keydown", (e) => {
-	if (e.code == "Backspace") {
-		if (inputBuffer.length > 0) {
-			inputBuffer = inputBuffer.substring(0, inputBuffer.length - 1);
-		}
-	} else if (e.code == "Enter") {
-		buffer += `\n${ps1}${inputBuffer}\n`;
+	switch (e.code) {
+		case "Backspace": {
+			if (inputBuffer.length > 0) {
+				inputBuffer = inputBuffer.substring(0, inputBuffer.length - 1);
+			}
+		} break;
 
-		emu.command(parse(inputBuffer));
-		inputBuffer = "";
-	} else {
-		if (e.key.length == 1) {
-			inputBuffer += e.key;
+		case "Enter": {
+			buffer += `\n${ps1}${inputBuffer}\n`;
+	
+			emu.command(parse(inputBuffer));
+			lastBuffer = inputBuffer;
+			inputBuffer = "";
+		} break;
+
+		case "ArrowUp": {
+			let x = lastBuffer;
+			lastBuffer = inputBuffer;
+			inputBuffer = x;
+		} break;
+
+		default: {
+			if (e.key.length == 1) {
+				inputBuffer += e.key;
+			}
 		}
 	}
 
@@ -48,6 +61,7 @@ ctx.font = "1em monospace";
 let frame = 0;
 let blink = false;
 
+let lastBuffer = "";
 let inputBuffer = "";
 let buffer = [
 	"ODD Kernel Console",
@@ -58,7 +72,7 @@ let ps1 = "$ ";
 (function render() {
 	frame++;
 
-	if (frame % 60 == 0)
+	if (frame % 30 == 0)
 		blink = !blink;
 
 	window.requestAnimationFrame(render);
@@ -88,7 +102,7 @@ let ps1 = "$ ";
 })();
 
 function parse(command) {
-	let instruction = command.split(" ");
+	let instruction = command.match(/[^\s"]+|"[^"]*"/g) || [];
 	let fInstruction = [];
 
 	switch (instruction[0]) {
@@ -122,6 +136,9 @@ function parse(command) {
 		} else if (arg.startsWith(`"`) && arg.endsWith(`"`)) {
 			arg = simplifyString(arg);
 			fInstruction = fInstruction.concat(arg);
+		} else if (arg.startsWith("0x")) {
+			arg = hexToBinary(arg);
+			fInstruction.push(arg);
 		} else {
 			fInstruction.push(arg);
 		}

@@ -34,15 +34,9 @@ class Kernel {
 
 	oops(process, error) {
 		this.emit("oops", `error: ${error ? error : "no error"}`);
-
-		// placeholder
 	}
 
 	panic(error) {
 		this.emit("panic", `error: ${error ? error : "no error"}`);
-
-		//while (true) {
-		//	this.emit("message", "");
-		//}
 	}
 }
