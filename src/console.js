@@ -119,6 +119,11 @@ function parse(command) {
 		case "pop": instruction[0] = "11"; break;
 		case "clr": instruction[0] = "100"; break;
 
+		// memory
+		case "mem": instruction[0] = "1100"; break;
+		case "stk": instruction[0] = "1101"; break;
+		case "ust": instruction[0] = "1110"; break;
+
 		// math
 		case "add": instruction[0] = "101"; break;
 		case "sub": instruction[0] = "110"; break;
@@ -129,11 +134,6 @@ function parse(command) {
 		case "ieg": instruction[0] = "1001"; break;
 		case "iel": instruction[0] = "1010"; break;
 		case "ieq": instruction[0] = "1011"; break;
-
-		// memory
-		case "mem": instruction[0] = "1100"; break;
-		case "stk": instruction[0] = "1101"; break;
-		case "ust": instruction[0] = "1110"; break;
 	}
 
 	for (let i = 0; i < instruction.length; i++) {

@@ -14,6 +14,18 @@ Kernel itself located at `/src/lib/kernel.js`.
 		- clears current stack
 		- is potetially dangerous
 
+- memory
+	- `00001100` | `mem` | memory
+		- reserves memory addresses between `s[1]` to `s[0]`
+		- writes `STX` to `s[1]`
+		- writes `ETX` to `s[0]`
+	- `00001101` | `stk x` | enter stack
+		- changes from global stack to memory stack
+		- tries to read stack from x, if not `STX` then panic, and if there isn't any `ETX` after one megabyte panic aswell
+	- `00001110` | `ust` | unstack
+		- changes from memory stack to global stack
+		- if not in a memory stack, act as null
+
 - math
 	- `00000101` | `add` | add
 		- mathematically adds two values on top of stack
@@ -34,18 +46,6 @@ Kernel itself located at `/src/lib/kernel.js`.
 	- `00001001` | `ieg x` | if greater than or equal to
 	- `00001010` | `iel x` | if less than or equal to
 	- `00001011` | `ieq x` | if equal to
-
-- memory
-	- `00001100` | `mem` | memory
-		- reserves memory addresses between `s[1]` to `s[0]`
-		- writes `STX` to `s[1]`
-		- writes `ETX` to `s[0]`
-	- `00001101` | `stk x` | enter stack
-		- changes from global stack to memory stack
-		- tries to read stack from x, if not `STX` then panic, and if there isn't any `ETX` after one megabyte panic aswell
-	- `00001110` | `ust` | unstack
-		- changes from memory stack to global stack
-		- if not in a memory stack, act as null
 
 - misc
 	- `00000000` | `jmp x` | jump

@@ -1,5 +1,5 @@
-Array.prototype.last = () => {
-	return this[this.length - 1];
+function lastOf(array, x = 1) {
+	return array[array.length - x];
 }
 
 function isBinary(bin) {

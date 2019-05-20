@@ -51,6 +51,11 @@ class Kernel {
 			case 3: this.stack.pop(); break;
 			case 4: this.stack = []; break;
 
+			// memory
+			case 12: this.emit("message", "Memory"); break;
+			case 13: this.emit("message", "Stack"); break;
+			case 14: this.emit("message", "Unstack"); break;
+
 			default: this.panic("invalid instruction"); break; // will oops if in process
 		}
 	}
