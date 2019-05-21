@@ -15,14 +15,18 @@ Kernel itself located at `/src/lib/kernel.js`.
 		- is potetially dangerous
 
 - memory
-	- `00001100` | `mem` | memory
-		- reserves memory addresses between `s[1]` to `s[0]`
+	- `00001100` | `mem` | allocate memory
+		- allocates memory addresses between `s[1]` to `s[0]`
 		- writes `STX` to `s[1]`
 		- writes `ETX` to `s[0]`
-	- `00001101` | `stk x` | enter stack
+		- writes `Space` (ascii `0x20`) to everything inbetween
+	- `00001101` | `umm` | unallocaate memory
+		- unallocates memory addresses between `s[1]` to `s[0]`
+		- writes `NULL` to `s[1]`, `s[0]`, and everything inbetween
+	- `00001110` | `stk x` | enter stack
 		- changes from global stack to memory stack
 		- tries to read stack from x, if not `STX` then panic, and if there isn't any `ETX` after one megabyte panic aswell
-	- `00001110` | `ust` | unstack
+	- `00001111` | `ust` | unstack
 		- changes from memory stack to global stack
 		- if not in a memory stack, act as null
 

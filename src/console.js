@@ -121,8 +121,9 @@ function parse(command) {
 
 		// memory
 		case "mem": instruction[0] = "1100"; break;
-		case "stk": instruction[0] = "1101"; break;
-		case "ust": instruction[0] = "1110"; break;
+		case "umm": instruction[0] = "1101"; break;
+		case "stk": instruction[0] = "1110"; break;
+		case "ust": instruction[0] = "1111"; break;
 
 		// math
 		case "add": instruction[0] = "101"; break;

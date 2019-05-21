@@ -52,9 +52,29 @@ class Kernel {
 			case 4: this.stack = []; break;
 
 			// memory
-			case 12: this.emit("message", "Memory"); break;
-			case 13: this.emit("message", "Stack"); break;
-			case 14: this.emit("message", "Unstack"); break;
+			case 12: { // mem
+				let start = lastOf(this.stack, 2);
+				let end = lastOf(this.stack);
+
+				this.memory[start] = 2;
+				this.memory[end] = 3;
+				
+				for (let i = start + 1; i < end; i++) {
+					this.memory[i] = 65;
+				}
+			} break;
+
+			case 13: { // umm
+				let start = lastOf(this.stack, 2);
+				let end = lastOf(this.stack);
+
+				for (let i = start; i < end + 1; i++) {
+					this.memory[i] = 0;
+				}
+			} break;
+
+			case 14: break;
+			case 15: break;
 
 			default: this.panic("invalid instruction"); break; // will oops if in process
 		}
